@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чат</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .chat-container {
+            text-align: center;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+            width: 400px;
+        }
+        #chat {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: blue; /* Синий цвет фона */
+            color: white; /* Белый цвет текста */
+            border: none; /* Удаление границы */
+            border-radius: 5px; /* Скругленные углы */
+            cursor: pointer; /* Указатель при наведении */
+        }
+        button:hover {
+            background-color: darkblue; /* Темно-синий цвет при наведении */
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h1>Чат</h1>
+        <div id="chat"></div>
+        <input type="text" id="username" placeholder="Имя">
+        <input type="text" id="message" placeholder="Сообщение">
+        <button id="send">Отправить</button>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#send').click(function() {
+                var username = $('#username').val();
+                var message = $('#message').val();
+
+                $.post('/send_message', {username: username, message: message}, function(data) {
+                    $('#chat').empty();
+                    for (var user in data) {
+                        data[user].forEach(function(msg) {
+                            $('#chat').append('<p><strong>' + user + ':</strong> ' + msg + '</p>');
+                        });
+                    }
+                });
+
+                $('#message').val('');
+            });
+        });
+    </script>
+</body>
+</html>
